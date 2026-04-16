@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "demo:gemini": "node gemini/demo.js"
+  },
+  "devDependencies": {
+    "shadcn": "^4.2.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.4.2"
+  }
+}
