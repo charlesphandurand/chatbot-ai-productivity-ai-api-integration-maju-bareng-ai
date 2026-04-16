@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoSense AI - Crypto Tracker & Analyst</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="bg-animation">
+            <div class="floating-coin coin-1">₿</div>
+            <div class="floating-coin coin-2">Ξ</div>
+            <div class="floating-coin coin-3">₿</div>
+            <div class="floating-coin coin-4">◎</div>
+            <div class="floating-coin coin-5">Ξ</div>
+        </div>
+
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <span class="logo-text">CryptoSense <span class="highlight">AI</span></span>
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="beginner">🌱 Beginner</button>
+                <button class="mode-btn" data-mode="advanced">⚡ Advanced</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <aside class="market-panel">
+                <div class="panel-header">
+                    <h3>📈 Market Overview</h3>
+                    <span class="update-time" id="lastUpdate">Loading...</span>
+                </div>
+
+                <div class="crypto-cards" id="cryptoCards"></div>
+
+                <div class="fear-greed-panel">
+                    <h4>😨 Fear & Greed Index</h4>
+                    <div class="fear-greed-display">
+                        <div class="gauge">
+                            <div class="gauge-fill" id="fearGreedFill"></div>
+                        </div>
+                        <span class="fear-greed-value" id="fearGreedValue">--</span>
+                        <span class="fear-greed-label" id="fearGreedLabel">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="macro-panel">
+                    <h4>🌍 Macro Indicators</h4>
+                    <div class="macro-items">
+                        <div class="macro-item">
+                            <span class="macro-label">🇺🇸 US Interest Rate</span>
+                            <span class="macro-value" id="usRate">5.25%</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">🇯🇵 BOJ Policy</span>
+                            <span class="macro-value" id="bojPolicy">0.1%</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">📉 US Inflation</span>
+                            <span class="macro-value" id="usInflation">3.2%</span>
+                        </div>
+                        <div class="macro-item">
+                            <span class="macro-label">🥇 Gold (oz)</span>
+                            <span class="macro-value" id="goldPrice">$2,045</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="chat-section">
+                <div class="chat-header">
+                    <div class="chat-status">
+                        <span class="status-dot"></span>
+                        <span>Live Data Connected</span>
+                    </div>
+                    <button class="alert-btn" id="alertBtn">🔔 Alert</button>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <div class="bot-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>👋 <strong>Yo! CryptoSense AI di sini!</strong></p>
+                            <p>Gue bisa bantu lo buat ngertiin dunia crypto, analisis chart, bahkan analisa gambar chart yang lo upload juga bisa!</p>
+                            <p style="margin-top: 0.75rem;">Tinggal ketik aja atau paste gambar chart, gue kasih analisa lengkap. 🚀</p>
+                            <div class="quick-actions">
+                                <button class="quick-btn" data-msg="BTC">₿ BTC</button>
+                                <button class="quick-btn" data-msg="ETH">Ξ ETH</button>
+                                <button class="quick-btn" data-msg="analisis pasar">📊 Analisis Pasar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <label class="image-upload-btn" for="imageInput" title="Upload Chart Image">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </label>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <input type="text" id="chatInput" placeholder="Tanya apa aja..." autocomplete="off">
+                    <button class="send-btn" id="sendBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                    <img id="imagePreview" src="" alt="Preview">
+                    <button class="remove-image" id="removeImage">&times;</button>
+                </div>
+
+                <div class="disclaimer">
+                    <p>⚠️ <strong>Disclaimer:</strong> Informasi ini hanya untuk edukasi, bukan nasihat keuangan. Selalu DYOR.</p>
+                </div>
+            </section>
+        </main>
+
+        <section class="chart-section">
+            <div class="chart-header">
+                <div class="chart-coin-info">
+                    <span id="chartCoinName">Bitcoin (BTC)</span>
+                    <span class="chart-price" id="chartPrice">--</span>
+                    <span class="chart-change" id="chartChange">--</span>
+                </div>
+                <div class="chart-controls">
+                    <div class="timeframe-btns">
+                        <button class="tf-btn" data-tf="1">1H</button>
+                        <button class="tf-btn" data-tf="4">4H</button>
+                        <button class="tf-btn active" data-tf="24">1D</button>
+                        <button class="tf-btn" data-tf="168">1W</button>
+                        <button class="tf-btn" data-tf="720">1M</button>
+                    </div>
+                    <div class="chart-selector">
+                        <select id="chartCoinSelect">
+                            <option value="bitcoin">BTC</option>
+                            <option value="ethereum">ETH</option>
+                            <option value="solana">SOL</option>
+                            <option value="ripple">XRP</option>
+                            <option value="binancecoin">BNB</option>
+                            <option value="cardano">ADA</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <div id="priceChart"></div>
+                <div id="volumeChart"></div>
+            </div>
+            <div class="chart-indicators">
+                <span class="indicator-label">MA(7): <span id="ma7Value">--</span></span>
+                <span class="indicator-label">MA(25): <span id="ma25Value">--</span></span>
+                <span class="indicator-label">High: <span id="highValue">--</span></span>
+                <span class="indicator-label">Low: <span id="lowValue">--</span></span>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal" id="alertModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔔 Set Price Alert</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Crypto</label>
+                    <select id="alertCrypto">
+                        <option value="bitcoin">Bitcoin (BTC)</option>
+                        <option value="ethereum">Ethereum (ETH)</option>
+                        <option value="solana">Solana (SOL)</option>
+                        <option value="ripple">XRP</option>
+                        <option value="binancecoin">BNB</option>
+                        <option value="cardano">ADA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alert Type</label>
+                    <select id="alertType">
+                        <option value="above">Price Above</option>
+                        <option value="below">Price Below</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target Price ($)</label>
+                    <input type="number" id="alertPrice" placeholder="e.g. 50000">
+                </div>
+                <button class="create-alert-btn" id="createAlert">Create Alert</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="services/coingecko.js"></script>
+    <script src="components/chat-ui.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
