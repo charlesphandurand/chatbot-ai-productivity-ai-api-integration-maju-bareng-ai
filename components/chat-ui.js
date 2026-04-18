@@ -9,6 +9,27 @@ const ChatUI = {
             if (e.key === 'Enter') this.handleSend();
         });
         
+        this.chatInput.addEventListener('paste', (e) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+            
+            for (const item of items) {
+                if (item.type.startsWith('image/')) {
+                    e.preventDefault();
+                    const file = item.getAsFile();
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const imageData = event.target.result;
+                            this.handleSend(imageData);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                    break;
+                }
+            }
+        });
+        
         const chatArea = document.getElementById('chatMessages');
         chatArea.addEventListener('dragover', (e) => {
             e.preventDefault();

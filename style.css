@@ -274,14 +274,8 @@ body {
 }
 
 .message-content {
-    background: var(--bg-secondary);
-    padding: 0.6rem 0.75rem;
-    border-radius: 10px;
-    border-top-left-radius: 4px;
     font-size: 0.8rem;
     line-height: 1.5;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
 }
 
 .message-content p { margin-bottom: 0.25rem; }
@@ -300,17 +294,19 @@ body {
 .user-message .message-content {
     background: var(--accent-primary);
     color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     border-top-right-radius: 4px;
-    max-width: 85%;
-    word-wrap: break-word;
+    padding: 0.6rem 0.85rem;
+    align-self: flex-end;
 }
 
 .bot-message { display: flex; gap: 0.6rem; }
 
 .bot-message .message-content {
-    flex: 1;
-    word-wrap: break-word;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border-top-left-radius: 4px;
+    padding: 0.6rem 0.85rem;
 }
 
 .typing-dot {

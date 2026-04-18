@@ -379,7 +379,7 @@ const AIEngine = {
         
         this.conversationHistory.push({ role: 'user', msg: userMessage, image: finalImageData });
         
-        const response = this.generateResponse(userMessage, finalImageData);
+        const response = await this.generateResponse(userMessage, finalImageData);
         ChatUI.addBotMessage(response);
         
         this.conversationHistory.push({ role: 'bot', msg: response });
@@ -389,7 +389,7 @@ const AIEngine = {
         document.getElementById('imageInput').value = '';
     },
     
-    generateResponse(msg, imageData = null) {
+    async generateResponse(msg, imageData = null) {
         const text = msg.toLowerCase().trim();
         const words = text.split(/\s+/);
         const btc = CoinGeckoService.getCoinData('bitcoin');
@@ -420,9 +420,9 @@ const AIEngine = {
         }
         
         // Smart routing
-        if (/halo|hai|hi|hey|p|salam/.test(words[0])) return this.respondCasual('greeting');
-        if (/terima.?kasih|thanks|makasih|tq|makasih|oke ok sip/.test(text)) return this.respondCasual('thanks');
-        if (/maaf|sorry|oops/.test(text)) return this.respondCasual('sorry');
+        if (/^(?:halo|hai|hi|hey|p|salam)$/i.test(words[0])) return this.respondCasual('greeting');
+        if (/^(?:terima.?kasih|thanks|makasih|tq|oke|ok|sip)$/i.test(text)) return this.respondCasual('thanks');
+        if (/^(?:maaf|sorry|oops)$/i.test(text)) return this.respondCasual('sorry');
         
         // Image-related questions
         if (/analisa.?gambar|analyze.?image|lihat.?chart|read.?chart|cek.?gambar/.test(text) && !this.imageData) {
@@ -509,8 +509,30 @@ const AIEngine = {
             return this.respondHelpCasual();
         }
         
-        // Default - give useful response
-        return this.respondSmartCasual(btc, text);
+        // Default - Call Gemini API for general questions
+        return this.callGeminiAPI(msg);
+    },
+
+    async callGeminiAPI(message) {
+        try {
+            console.log('[API] Calling Gemini with:', message);
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const data = await response.json();
+            console.log('[API] Response:', data);
+            if (data.response) {
+                return data.response;
+            }
+            if (data.error) {
+                console.error('[API] Server error:', data.error);
+            }
+        } catch (err) {
+            console.error('Gemini API error:', err);
+        }
+        return '<p>Maaf, gue lagi nggak bisa jawab sekarang. Coba lagi ya!</p>';
     },
     
     respondCasual(type) {

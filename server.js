@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { generateGeminiText } = require('./gemini/client');
+require('dotenv').config();
 
 const PORT = 3000;
 
@@ -14,8 +16,33 @@ const MIME_TYPES = {
     '.ico': 'image/x-icon'
 };
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+    if (req.method === 'POST' && req.url === '/api/chat') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', async () => {
+            try {
+                const { message } = JSON.parse(body);
+                const prompt = `Jawab pertanyaan ini dengan singkat dan jelas. Kalau tidak tahu, bilang saja tidak tahu. Gaya bahasa: Indonesia gaul (lo/gue, mantap).\n\nPertanyaan: ${message}`;
+                const response = await generateGeminiText(prompt);
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ response }));
+            } catch (err) {
+                console.error('Gemini API Error:', err.message);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'AI service unavailable' }));
+            }
+        });
+        return;
+    }
+
     let filePath = req.url === '/' ? '/index.html' : req.url;
+    if (req.url.startsWith('/api/')) {
+        res.writeHead(404);
+        res.end('Not Found');
+        return;
+    }
     filePath = path.join(__dirname, filePath);
 
     const ext = path.extname(filePath);

@@ -34,7 +34,7 @@ function getCsvEnv(name) {
 
 function buildModelConfig({
   model = process.env.GEMINI_MODEL || "gemini-2.5-flash",
-  temperature = getFloatEnv("GEMINI_TEMPERATURE", 0.7),
+  temperature = getFloatEnv("GEMINI_TEMPERATURE", 1),
   maxOutputTokens = getIntEnv("GEMINI_MAX_OUTPUT_TOKENS", 256),
   systemInstruction = process.env.GEMINI_SYSTEM_INSTRUCTION || undefined,
 } = {}) {
